@@ -1,8 +1,3 @@
----
-title: "Pipeline"
-output: html_document
-date: "2025-03-17"
----
 # Bioinformatics Pipeline for UTI Pathogen 
 *Identification from Host-Depleted Nanopore Sequencing Data (Optimized for bacterial detection in bat urinary samples/tissues relevant to UTI-causing pathogens)*
 
