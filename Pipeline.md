@@ -9,9 +9,7 @@
 Convert raw Nanopore signals into DNA sequences using Guppy or Bonito.
 
 ``` console
-bash
-Copy
-Edit
+
 # pod5 files can give dorado the type of bascalling model to use, 
 # but for fastq files this information dosent appear, so it can be good to specify the model
 
