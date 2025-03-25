@@ -74,7 +74,7 @@ samtools fastq dorado_sup_out/barcode01.bam > samtools_fastq_out/barcode01.fastq
 
 4.  Now, use NanoPlot to generate a report for each barcode:
 
-``` {.conda style="color: green"}
+``` {.conda style="color: red"}
 NanoPlot -t 2 --fastq samtools_fastq_out/barcode01.fastq --loglength --plots kde --title barcode01 -o nanoplot_out/barcode01
 ```
 
