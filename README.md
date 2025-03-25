@@ -18,7 +18,7 @@
 
 4.  To access dorado from anywhere on the computer, move it to the local directory and add it to the configuration file:
 
-``` {.console style="color: gray"}
+``` python
 sudo mv dorado-0.9.1-osx-arm64 /usr/local/dorado
 
 echo 'export PATH=/usr/local/dorado/bin:$PATH' >> ~/.zshrc
