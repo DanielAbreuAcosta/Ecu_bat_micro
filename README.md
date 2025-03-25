@@ -8,7 +8,7 @@
 
 ### Basecalling
 
-Loop through each barcode directory and convert raw Nanopore signals into DNA sequences using Dorado.
+Loop through each barcode directory and convert raw Nanopore signals into DNA sequences using Dorado:
 
 ``` console
 for i in $(seq -w 01 24)  # -w ensures leading zeros
@@ -26,39 +26,41 @@ To check any of the BAM files, run:
 samtools head -n 100 barcodexx.bam
 ```
 
-remember to replace the `barcodexx.bam` with your filename
+remember to replace the `barcodexx.bam` with your filename.
 
 ### Data Visualization
 
 In order to clean up the data, first look into the quality of the reads, as well as their length, this can be done with NanoPlot.
 
-This package prefers fastq files, so first transform them using samtools
+This package prefers fastq files, so first transform them using samtools:
 
 ``` console
 samtools fastq dorado_sup_out/barcode01.bam > samtools_fastq_out/barcode01.fastq
 ```
 
-Now, use NanoPlot to generate a report for each barcode
+Now, use NanoPlot to generate a report for each barcode:
 
 ``` conda
 NanoPlot -t 2 --fastq samtools_fastq_out/barcode01.fastq --loglength --plots kde --title barcode01 -o nanoplot_out/barcode01
 ```
 
-`-t 2` makes the package run in two threads
+`-t 2` makes the package run in two threads, this can speed up the process with more powerful gpus.
 
-`--fastq samtools_fastq_out/barcode01.fastq` gives the file type and the file name
+`--fastq samtools_fastq_out/barcode01.fastq` gives the file type and the file name.
 
-`--loglength` puts read lengths on a logarithmic scale
+`--loglength` puts read lengths on a logarithmic scale.
 
-`kde` creates a kernel density estimate plot (kde plot), which is a method for visualizing the distribution of the data, similar to a histogram (<https://seaborn.pydata.org/generated/seaborn.kdeplot.html>)
+`kde` creates a kernel density estimate plot (kde plot), which is a method for visualizing the distribution of the data, similar to a histogram (<https://seaborn.pydata.org/generated/seaborn.kdeplot.html>).
 
-`--title barcode01` Puts the title on all plots
+`--title barcode01` Puts the title on all plots.
 
-`-o nanoplot_out/barcode01` puts all generated graphs in this directory
+`-o nanoplot_out/barcode01` puts all generated graphs in this directory.
+
+\_\_\_\_
 
 ### Quality Filtering
 
-Remove short and low-quality reads using Filtlong or NanoFilt.
+Remove short and low-quality reads using Filtlong or NanoFilt:
 
 ``` console
 bash
@@ -71,7 +73,7 @@ filtlong --min_length 1000 --keep_percent 90 basecalled.fastq > filtered.fastq
 
 ### Bacterial Identification (Including UTI Pathogens)
 
-Use Kraken2, Centrifuge, or Kaiju for taxonomic assignment.
+Use Kraken2, Centrifuge, or Kaiju for taxonomic assignment:
 
 ``` console
 bash
