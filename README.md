@@ -44,7 +44,7 @@ source ~/.zshrc
 
 1.  Loop through each barcode directory and convert raw Nanopore signals into DNA sequences using Dorado:
 
-``` {.console style="color: gray"}
+``` bash
 for i in $(seq -w 01 24)  # -w ensures leading zeros
 do
     barcode="barcode${i}"
@@ -56,7 +56,7 @@ done
 
 2.  To check any of the BAM files, run:
 
-``` {.console style="color: gray"}
+``` bash
 samtools head -n 100 barcodexx.bam
 ```
 
@@ -68,13 +68,13 @@ Remember to replace the `barcodexx.bam` with your filename.
 
 This package prefers fastq files, so first transform them using samtools:
 
-``` {.console style="color: gray"}
+``` bash
 samtools fastq dorado_sup_out/barcode01.bam > samtools_fastq_out/barcode01.fastq
 ```
 
 4.  Now, use NanoPlot to generate a report for each barcode:
 
-``` {.conda style="color: red"}
+``` python
 NanoPlot -t 2 --fastq samtools_fastq_out/barcode01.fastq --loglength --plots kde --title barcode01 -o nanoplot_out/barcode01
 ```
 
