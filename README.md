@@ -8,23 +8,25 @@
 
 ### Basecalling
 
-Convert raw Nanopore signals into DNA sequences using Guppy or Bonito.
+Loop through each barcode directory and convert raw Nanopore signals into DNA sequences using Dorado.
 
 ``` console
-
-# pod5 files can give dorado the type of bascalling model to use, 
-# but for fastq files this information dosent appear, so it can be good to specify the model
-
-dorado download --model dna_r10.4.1_e8.2_260bps_fast@v4.0.0
-
-# run basecaller and output it into a new bam file
-
-dorado basecaller dna_r10.4.1_e8.2_260bps_fast@v4.0.0 dna_r10.4.1_e8.2_400bps_4khz-FLO_FLG114-SQK_PCB114_24-4000.pod5 > call.bam
-
-# chech the first few lines of the bam file using samtools
-
-samtools head -n 100 call.bam
+for i in $(seq -w 01 24)  # -w ensures leading zeros
+do
+    barcode="barcode${i}"
+    dorado basecaller dna_r10.4.1_e8.2_400bps_sup@v5.0.0 "pod5_pass/$barcode/" > "dorado_sup_out/${barcode}.bam"
+done
 ```
+
+\`\``dna_r10.4.1_e8.2_400bps_sup@v5.0.0`\`\`\` is the version of the basecaller to use, pod5 can give dorado the kind of basecalling model to use, but it can be good to specify the model, specially if using fastq files (which don't contain this information).
+
+to check any of the BAM files, run:
+
+``` console
+samtools head -n 100 barcodexx.bam
+```
+
+remember to replace the \`\``barcodexx.bam`\`\`\`with your filename
 
 ### Data Visualization
 
@@ -36,7 +38,6 @@ samtools fastq barcode06.bam > barcode06.fastq
 
 #make nanoplot output
 nanoplot -t 2 --fastq barcode06.fastq --loglength --plots kde --title barcode06 -o barcode06 
-
 ```
 
 ### Quality Filtering
