@@ -4,6 +4,18 @@
 
 *Identification from Host-Depleted Nanopore Sequencing Data (Optimized for bacterial detection in bat urinary samples/tissues relevant to UTI-causing pathogens)*
 
+## Step 0: Installations
+
+### Dorado
+
+### Homebrew
+#### Samtools
+
+### Conda
+#### Bioconda
+##### NanoPlot
+
+
 ## Step 1: Basecalling & Quality Control
 
 ### Basecalling
