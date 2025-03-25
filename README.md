@@ -4,23 +4,45 @@
 
 *Identification from Host-Depleted Nanopore Sequencing Data (Optimized for bacterial detection in bat urinary samples/tissues relevant to UTI-causing pathogens)*
 
+*Using an Apple Silicon Macbook (M2 chip), some of this code will still work in other operating systems, especially the Python code. Most, if not all, of the installation steps won't work on other OS*
+
 ## Step 0: Installations
 
 ### Dorado
 
+1.  To download the latest version of Dorado, go to <https://nanoporetech.com/software/other/dorado> and select your operating system. If you don't have an account with ONT, you'll be prompted to create before installing.
+
+2.  Decompress the downloaded zip file
+
+3.  Open terminal and navigate to the directory containing the file
+
+4.  To access dorado from anywhere on the computer, move it to the local directory and add it to the configuration file:
+
+``` {.console style="color: gray"}
+sudo mv dorado-0.9.1-osx-arm64 /usr/local/dorado
+
+echo 'export PATH=/usr/local/dorado/bin:$PATH' >> ~/.zshrc
+
+source ~/.zshrc
+```
+
+5.  run `dorado --version` to check that the installation was successful, this should work from any directory
+
 ### Homebrew
-#### Samtools
+
+### Samtools
 
 ### Conda
-#### Bioconda
-##### NanoPlot
 
+### Bioconda
+
+### NanoPlot
 
 ## Step 1: Basecalling & Quality Control
 
 ### Basecalling
 
-Loop through each barcode directory and convert raw Nanopore signals into DNA sequences using Dorado:
+1.  Loop through each barcode directory and convert raw Nanopore signals into DNA sequences using Dorado:
 
 ``` console
 for i in $(seq -w 01 24)  # -w ensures leading zeros
@@ -32,17 +54,17 @@ done
 
 `dna_r10.4.1_e8.2_400bps_sup@v5.0.0` is the version of the basecaller to use, pod5 can give dorado the kind of basecalling model to use, but it can be good to specify the model, specially if using fastq files (which don't contain this information).
 
-To check any of the BAM files, run:
+2.  To check any of the BAM files, run:
 
 ``` console
 samtools head -n 100 barcodexx.bam
 ```
 
-remember to replace the `barcodexx.bam` with your filename.
+Remember to replace the `barcodexx.bam` with your filename.
 
 ### Data Visualization
 
-In order to clean up the data, first look into the quality of the reads, as well as their length, this can be done with NanoPlot.
+3.  In order to clean up the data, first look into the quality of the reads, as well as their length, this can be done with NanoPlot.
 
 This package prefers fastq files, so first transform them using samtools:
 
@@ -50,9 +72,9 @@ This package prefers fastq files, so first transform them using samtools:
 samtools fastq dorado_sup_out/barcode01.bam > samtools_fastq_out/barcode01.fastq
 ```
 
-Now, use NanoPlot to generate a report for each barcode:
+4.  Now, use NanoPlot to generate a report for each barcode:
 
-``` conda
+``` {.conda style="color: green"}
 NanoPlot -t 2 --fastq samtools_fastq_out/barcode01.fastq --loglength --plots kde --title barcode01 -o nanoplot_out/barcode01
 ```
 
