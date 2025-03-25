@@ -18,27 +18,43 @@ do
 done
 ```
 
-\`\``dna_r10.4.1_e8.2_400bps_sup@v5.0.0`\`\`\` is the version of the basecaller to use, pod5 can give dorado the kind of basecalling model to use, but it can be good to specify the model, specially if using fastq files (which don't contain this information).
+`dna_r10.4.1_e8.2_400bps_sup@v5.0.0` is the version of the basecaller to use, pod5 can give dorado the kind of basecalling model to use, but it can be good to specify the model, specially if using fastq files (which don't contain this information).
 
-to check any of the BAM files, run:
+To check any of the BAM files, run:
 
 ``` console
 samtools head -n 100 barcodexx.bam
 ```
 
-remember to replace the \`\``barcodexx.bam`\`\`\`with your filename
+remember to replace the `barcodexx.bam` with your filename
 
 ### Data Visualization
 
-In order to clean up the data, first look into the quality of the reads, aswell as their length, this can be done with NanoPack
+In order to clean up the data, first look into the quality of the reads, as well as their length, this can be done with NanoPlot.
+
+This package prefers fastq files, so first transform them using samtools
+
+``` console
+samtools fastq dorado_sup_out/barcode01.bam > samtools_fastq_out/barcode01.fastq
+```
+
+Now, use NanoPlot to generate a report for each barcode
 
 ``` conda
-#change the format to fastq to make it easier to work with in NanoPack
-samtools fastq barcode06.bam > barcode06.fastq
-
-#make nanoplot output
-nanoplot -t 2 --fastq barcode06.fastq --loglength --plots kde --title barcode06 -o barcode06 
+NanoPlot -t 2 --fastq samtools_fastq_out/barcode01.fastq --loglength --plots kde --title barcode01 -o nanoplot_out/barcode01
 ```
+
+`-t 2` makes the package run in two threads
+
+`--fastq samtools_fastq_out/barcode01.fastq` gives the file type and the file name
+
+`--loglength` puts read lengths on a logarithmic scale
+
+`kde` creates a kernel density estimate plot (kde plot), which is a method for visualizing the distribution of the data, similar to a histogram (<https://seaborn.pydata.org/generated/seaborn.kdeplot.html>)
+
+`--title barcode01` Puts the title on all plots
+
+`-o nanoplot_out/barcode01` puts all generated graphs in this directory
 
 ### Quality Filtering
 
