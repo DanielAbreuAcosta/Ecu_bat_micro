@@ -1,5 +1,7 @@
 # Bioinformatics Pipeline for UTI Pathogen
 
+**DISCLAIMER: this code is nowhere near finished**
+
 *Identification from Host-Depleted Nanopore Sequencing Data (Optimized for bacterial detection in bat urinary samples/tissues relevant to UTI-causing pathogens)*
 
 ## Step 1: Basecalling & Quality Control
@@ -22,6 +24,19 @@ dorado basecaller dna_r10.4.1_e8.2_260bps_fast@v4.0.0 dna_r10.4.1_e8.2_400bps_4k
 # chech the first few lines of the bam file using samtools
 
 samtools head -n 100 call.bam
+```
+
+### Data Visualization
+
+In order to clean up the data, first look into the quality of the reads, aswell as their length, this can be done with NanoPack
+
+``` conda
+#change the format to fastq to make it easier to work with in NanoPack
+samtools fastq barcode06.bam > barcode06.fastq
+
+#make nanoplot output
+nanoplot -t 2 --fastq barcode06.fastq --loglength --plots kde --title barcode06 -o barcode06 
+
 ```
 
 ### Quality Filtering
