@@ -38,6 +38,10 @@ source ~/.zshrc
 
 ### NanoPlot
 
+##Chopper
+
+conda install -c bioconda chopper
+
 ## Step 1: Basecalling & Quality Control
 
 ### Basecalling
@@ -69,38 +73,51 @@ Remember to replace the `barcodexx.bam` with your filename.
 This package prefers fastq files, so first transform them using samtools:
 
 ``` bash
-samtools fastq dorado_sup_out/barcode01.bam > samtools_fastq_out/barcode01.fastq
+for i in $(seq -w 01 24)
+  do
+    barcode="barcode${i}"
+    samtools fastq dorado_sup_out/barcode${i}.bam > samtools_fastq_out/barcode${i}.fastq
+done
 ```
 
 4.  Now, use NanoPlot to generate a report for each barcode:
 
-``` {#python .python}
-NanoPlot -t 2 --fastq samtools_fastq_out/barcode01.fastq --loglength --plots kde --title barcode01 -o nanoplot_out/barcode01
+``` python
+for i in $(seq -w 01 24)
+  do
+    NanoPlot -t 8 --fastq samtools_fastq_out/barcode${i}.fastq --loglength --plots kde --title barcode${i} -o nanoplot_out/barcode${i}
+done
 ```
 
-`-t 2` makes the package run in two threads, this can speed up the process with more powerful gpus.
+`-t 8` makes the package run in two threads, this can speed up the process with more powerful gpus.
 
-`--fastq samtools_fastq_out/barcode01.fastq` gives the file type and the file name.
+`--fastq samtools_fastq_out/barcode${i}.fastq` gives the file type and the file name.
 
 `--loglength` puts read lengths on a logarithmic scale.
 
 `kde` creates a kernel density estimate plot (kde plot), which is a method for visualizing the distribution of the data, similar to a histogram (<https://seaborn.pydata.org/generated/seaborn.kdeplot.html>).
 
-`--title barcode01` Puts the title on all plots.
+`--title barcode${i}` Puts the title on all plots.
 
-`-o nanoplot_out/barcode01` puts all generated graphs in this directory.
+`-o nanoplot_out/barcode${i}` puts all generated graphs in this directory.
 
 \_\_\_\_
 
 ### Quality Filtering
 
-Remove short and low-quality reads using Filtlong or NanoFilt:
+Remove short and low-quality reads using chopper:
 
-``` console
-bash
-Copy
-Edit
-filtlong --min_length 1000 --keep_percent 90 basecalled.fastq > filtered.fastq
+``` python
+for i in $(seq -w 01 24)
+  do
+chopper --threads 8 -q 20 -l 500 -i samtools_fastq_out/barcode${i}.fastq > chopper_out/barcode${i}_filtered.fastq
+done
+```
+
+### Repeat Masking
+
+``` python
+dsfsda
 ```
 
 ## Step 2: Taxonomic Classification (UTI Pathogen Focus)

@@ -17,7 +17,27 @@ samtools head -n 100 call.bam
 
 samtools stats call.bam | grep ^RL | cut -f 2-
   
-   
-
-
   
+#####
+
+for i in $(seq -w 01 24)
+do
+samtools fastq dorado_sup_out/barcode${i}.bam > samtools_fastq_out/barcode01.fastq
+   
+for i in $(seq -w 01 24)
+do
+    barcode="barcode${i}"
+    samtools fastq dorado_sup_out/barcode${i}.bam > samtools_fastq_out/barcode${i}.fastq
+done
+
+
+for i in $(seq -w 01 24)
+  do
+    NanoPlot -t 8 --fastq samtools_fastq_out/barcode${i}.fastq --loglength --plots kde --title barcode${i} -o nanoplot_out/barcode${i}
+done
+
+
+for i in $(seq -w 01 24)
+  do
+chopper --threads 8 -q 20 -l 500 -i samtools_fastq_out/barcode${i}.fastq > chopper_out/barcode${i}_filtered.fastq
+done
