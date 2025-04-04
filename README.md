@@ -38,7 +38,7 @@ source ~/.zshrc
 
 ### NanoPlot
 
-##Chopper
+### Chopper
 
 conda install -c bioconda chopper
 
