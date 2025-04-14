@@ -102,7 +102,7 @@ conda activate example
 conda install -c bioconda chopper
 ```
 
-\## Step 1: Basecalling & Quality Control
+## Step 1: Basecalling & Quality Control
 
 ### Basecalling
 
