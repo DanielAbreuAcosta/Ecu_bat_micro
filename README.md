@@ -161,8 +161,6 @@ done
 
 `-o nanoplot_out/barcode${i}` puts all generated graphs in this directory.
 
-\_\_\_\_
-
 ### Quality Filtering
 
 Remove short and low-quality reads using chopper:
