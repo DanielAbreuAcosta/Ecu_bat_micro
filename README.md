@@ -40,7 +40,7 @@ source ~/.zshrc
 
 ### Samtools
 
-1.  [**After installing homebrew**]{.underline}, run:
+1.  **After installing homebrew**, run:
 
 ``` bash
 brew install samtools
