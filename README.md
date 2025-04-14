@@ -30,19 +30,79 @@ source ~/.zshrc
 
 ### Homebrew
 
+1.  Homebrew is an open-source package manager for macOS and Linux, it will help with the installation of packages like Samtools. To install Homebrew, run:
+
+``` bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+2.  to check that installation was sucesfull, run `brew config`.
+
 ### Samtools
+
+1.  [**After installing homebrew**]{.underline}, run:
+
+``` bash
+brew install samtools
+```
+
+2.  Check that installation was successful by running `samtools version`.
 
 ### Conda
 
+Anaconda is a reassembled program that aids in Python programming, it allows for easy download of packages, it includes Conda, which is an open-source manager.
+
+1.  To install it, go to <https://www.anaconda.com/download/success>, and select your operating system.
+2.  Execute the downloaded file, and follow the instructions of the installer.
+3.  Once downloaded, go to terminal. If installed correctly you should see `(base)` before the user and location information, this indicates that you are now in the base environment of conda, instead of the normal terminal
+4.  To exit out of conda run `conda deactivate`, and the `(base)` tag should dissapear. You are now back to the normal terminal. To go back into conda run `conda activate`.
+
+#### Set up an environment
+
+`(base)` indicates that you are in the base environment of conda, this contains all available packages. Best practice is to never work in this base environment, but to make a new environment for each new project instead.
+
+1.  To create an environment, run `conda create --name example`.
+2.  Check all current environments by running: `conda env list`.
+3.  Activate an environment with: `conda activate example`.
+4.  See all packages inside the environment with: `conda list` (some packages come preinstalled).
+5.  To exit back to the base environment, run: `conda deactivate`.
+
 ### Bioconda
+
+Bioconda is a package manager (or channel) that lets you install software packages related to biomedical research.
+
+1.  In the base environment, download Bioconda, aswell as Conda Forge (needed for Bioconda to work
+
+``` python
+conda config --add channels bioconda
+conda config --add channels conda-forge
+```
+
+2.  Make Conda strictly follow the order of channels when resolving dependencies, meaning it will first use the packages from bioconda and then the ones from conda forge. This prevent conda from looking for the same package in multiple channels.
+
+``` python
+conda config --set channel_priority strict
+```
 
 ### NanoPlot
 
+Nanoplot is a plotting tool for long read sequencing data and alignments. Go to your working environment and install it:
+
+``` python
+conda activate example
+conda install -c bioconda nanoplot
+```
+
 ### Chopper
 
-conda install -c bioconda chopper
+Chopper is a tool to filter and trim fastq files from long read sequencing techniques like ONT. Go to your working environment and install it:
 
-## Step 1: Basecalling & Quality Control
+``` python
+conda activate example
+conda install -c bioconda chopper
+```
+
+\## Step 1: Basecalling & Quality Control
 
 ### Basecalling
 
@@ -83,13 +143,13 @@ done
 4.  Now, use NanoPlot to generate a report for each barcode:
 
 ``` python
-for i in $(seq -w 01 24)
+time for i in $(seq -w 01 24)
   do
     NanoPlot -t 8 --fastq samtools_fastq_out/barcode${i}.fastq --loglength --plots kde --title barcode${i} -o nanoplot_out/barcode${i}
 done
 ```
 
-`-t 8` makes the package run in two threads, this can speed up the process with more powerful gpus.
+`-t 8` makes the package run in eight threads, this can speed up the process with more powerful gpus.
 
 `--fastq samtools_fastq_out/barcode${i}.fastq` gives the file type and the file name.
 
@@ -114,11 +174,21 @@ chopper --threads 8 -q 20 -l 500 -i samtools_fastq_out/barcode${i}.fastq > chopp
 done
 ```
 
+`--threads 8` makes the package run in eight threads, this can speed up the process with more powerful gpus.
+
+`-q 20` sets the minimum Phred Quality Score to 20. Any sequence with an average score below this will get removed.
+
+`-l 500` sets the minimum read length to 500bp.
+
+`-i samtools_fastq_out/barcode${i}.fastq` tells the package the name of the rile to filter.
+
 ### Repeat Masking
 
 ``` python
 dsfsda
 ```
+
+Hacer un filtrado con el genoma del hospedero para remover cualquier secuencia del hospedero
 
 ## Step 2: Taxonomic Classification (UTI Pathogen Focus)
 
