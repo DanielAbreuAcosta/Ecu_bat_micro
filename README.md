@@ -102,6 +102,15 @@ conda activate example
 conda install -c bioconda chopper
 ```
 
+### Flye
+
+Flye is a contig assembler developed for long read sequencing. We will mainly be using the metaFlye algorithm withing the Flye library. To install Flye:
+
+``` python
+conda activate example
+conda install -c bioconda flye
+```
+
 ## Step 1: Basecalling & Quality Control
 
 ### Basecalling
@@ -143,7 +152,7 @@ done
 4.  Now, use NanoPlot to generate a report for each barcode:
 
 ``` python
-time for i in $(seq -w 01 24)
+for i in $(seq -w 01 24)
   do
     NanoPlot -t 8 --fastq samtools_fastq_out/barcode${i}.fastq --loglength --plots kde --title barcode${i} -o nanoplot_out/barcode${i}
 done
@@ -163,12 +172,12 @@ done
 
 ### Quality Filtering
 
-Remove short and low-quality reads using chopper:
+5.  Remove short and low-quality reads using chopper:
 
 ``` python
 for i in $(seq -w 01 24)
   do
-chopper --threads 8 -q 20 -l 500 -i samtools_fastq_out/barcode${i}.fastq > chopper_out/barcode${i}_filtered.fastq
+chopper --threads 8 -q 20 -l 20 -i samtools_fastq_out/barcode${i}.fastq > chopper_out/barcode${i}_filtered.fastq
 done
 ```
 
@@ -180,17 +189,45 @@ done
 
 `-i samtools_fastq_out/barcode${i}.fastq` tells the package the name of the rile to filter.
 
-### Repeat Masking
-
-``` python
-dsfsda
-```
-
-Hacer un filtrado con el genoma del hospedero para remover cualquier secuencia del hospedero
-
 ## Step 2: Taxonomic Classification (UTI Pathogen Focus)
 
-### Bacterial Identification (Including UTI Pathogens)
+### De-novo Assembly
+
+1.  Assemble contigs using metaFlye:
+
+``` python
+for i in $(seq -w 01 24)
+  do
+    barcode="barcode${i}"
+flye --meta --read-error 0.03 --nano-hq chopper_out/barcode${i}_filtered.fastq --out-dir flye_out/barcode${i} --threads 4
+done
+```
+
+`--meta` activates metaFlye mode.
+
+`--read-error 0.03` specifies that data has already been filtered to Q20 (in step 1.5.).
+
+`--nano-hq` specifies that the data was basecalled using Dorado's super accurate mode (in step 1.1.).
+
+`chopper_out/barcode${i}_filtered.fastq` tells the package the name of the rile to assemble.
+
+`--out-dirflye_out/barcode${i}` specifies the output directory
+
+`--threads 8` makes the package run in eight threads, this can speed up the process with more powerful gpus.
+
+2.  Extract the assemblies from their enclosing folders:
+
+``` python
+for i in $(seq -w 01 24)
+  do
+    barcode="barcode${i}"
+    assembly="assembly{i}"
+cp flye_out/barcode${i}/assembly.fasta flye_assembly/assembly${i}.fasta
+cp flye_out/barcode${i}/assembly_info.txt flye_assembly/assembly${i}_info.txt
+done
+```
+
+### UTI Identification
 
 Use Kraken2, Centrifuge, or Kaiju for taxonomic assignment:
 

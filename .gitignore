@@ -6,3 +6,5 @@ nanoplot_out/
 dorado_sup_out/
 chopper_out/
 samtools_fastq_out/
+flye_out/
+flye_assembly/
