@@ -115,7 +115,7 @@ conda install -c bioconda flye
 
 ### Basecalling
 
-1.  Loop through each barcode directory and convert raw Nanopore signals into DNA sequences using Dorado:
+1.  Loop through each barcode directory and convert raw Nanopore signals into DNA sequences using Dorado (WARNING: this step is very taxing on computer resources, it will take a long time to run on a normal computer. It is probably best to do this step on a cluster if you have access to one):
 
 ``` bash
 for i in $(seq -w 01 24)  # -w ensures leading zeros
@@ -193,7 +193,7 @@ done
 
 ### De-novo Assembly
 
-1.  Assemble contigs using metaFlye:
+1.  Assemble contigs using metaFlye (WARNING: this step is very taxing on computer resources, it might take a while to run the command):
 
 ``` python
 for i in $(seq -w 01 24)
