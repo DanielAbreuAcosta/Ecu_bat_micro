@@ -185,9 +185,11 @@ done
 
 `-q 20` sets the minimum Phred Quality Score to 20. Any sequence with an average score below this will get removed.
 
-`-l 500` sets the minimum read length to 500bp.
+`-l 20` sets the minimum read length to 20bp.
 
-`-i samtools_fastq_out/barcode${i}.fastq` tells the package the name of the rile to filter.
+`-i samtools_fastq_out/barcode${i}.fastq` tells the package the name of the file to filter.
+
+[**I should filter the dataset with minimap2 before assembling contigs, i think ?**]{.underline}
 
 ## Step 2: Taxonomic Classification (UTI Pathogen Focus)
 
@@ -199,7 +201,7 @@ done
 for i in $(seq -w 01 24)
   do
     barcode="barcode${i}"
-flye --meta --read-error 0.03 --nano-hq chopper_out/barcode${i}_filtered.fastq --out-dir flye_out/barcode${i} --threads 4
+flye --meta --read-error 0.03 --nano-hq chopper_out/barcode${i}_filtered.fastq --out-dir flye_out/barcode${i} --threads 8
 done
 ```
 
