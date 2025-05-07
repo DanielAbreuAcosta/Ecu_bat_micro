@@ -10,13 +10,13 @@
 
 ### Dorado
 
-1.  To download the latest version of Dorado, go to <https://nanoporetech.com/software/other/dorado> and select your operating system. If you don't have an account with ONT, you'll be prompted to create before installing.
+1.  To download the latest version of Dorado, go to <https://nanoporetech.com/software/other/dorado> and select your operating system. If you don't have an account with ONT, you'll be prompted to create one before installing.
 
 2.  Decompress the downloaded zip file
 
 3.  Open terminal and navigate to the directory containing the file
 
-4.  To access dorado from anywhere on the computer, move it to the local directory and add it to the configuration file:
+4.  To access Dorado from anywhere on the computer, move it to the local directory and add it to the configuration file:
 
 ``` bash
 sudo mv dorado-0.9.1-osx-arm64 /usr/local/dorado
@@ -71,14 +71,14 @@ Anaconda is a reassembled program that aids in Python programming, it allows for
 
 Bioconda is a package manager (or channel) that lets you install software packages related to biomedical research.
 
-1.  In the base environment, download Bioconda, aswell as Conda Forge (needed for Bioconda to work
+1.  In the base environment, download Bioconda, aswell as Conda Forge (needed for Bioconda to work)
 
 ``` python
 conda config --add channels bioconda
 conda config --add channels conda-forge
 ```
 
-2.  Make Conda strictly follow the order of channels when resolving dependencies, meaning it will first use the packages from bioconda and then the ones from conda forge. This prevent conda from looking for the same package in multiple channels.
+2.  Make Conda strictly follow the order of channels when resolving dependencies, meaning it will first use the packages from bioconda and then the ones from conda forge. This prevents conda from looking for the same package in multiple channels.
 
 ``` python
 conda config --set channel_priority strict
@@ -127,19 +127,23 @@ done
 
 `dna_r10.4.1_e8.2_400bps_sup@v5.0.0` is the version of the basecaller to use, pod5 can give dorado the kind of basecalling model to use, but it can be good to specify the model, specially if using fastq files (which don't contain this information).
 
-2.  To check any of the BAM files, run:
+2.  To check any of the generated BAM files, run:
 
 ``` bash
 samtools head -n 100 barcodexx.bam
 ```
 
-Remember to replace the `barcodexx.bam` with your filename.
+Remember to replace the `barcodexx.bam` with your file-name.
+
+Each individual base-call is accompanied by another character which indicate the error probability for that base-call, called the Phred Quality score, which is calculated with the following formula:
+
+Q = −10 × log10 p
+
+Where p represents the estimated error probability. For example, a base-call with a Q score of 20 would have a probability of 1/100 of being incorrect. For a more in-depth explanation on this, read Ewing & Green (1998) (<http://genome.cshlp.org/cgi/pmidlookup?view=long&pmid=9521922>)
 
 ### Data Visualization
 
-3.  In order to clean up the data, first look into the quality of the reads, as well as their length, this can be done with NanoPlot.
-
-This package prefers fastq files, so first transform them using samtools:
+3.  In order to clean up the data, first look into the quality of the reads, as well as their length, this can be done with NanoPlot. This package prefers fastq files, so first transform them using samtools:
 
 ``` bash
 for i in $(seq -w 01 24)
@@ -191,11 +195,25 @@ done
 
 [**I should filter the dataset with minimap2 before assembling contigs, i think ?**]{.underline}
 
+### Host Sequence Filtering
+
+1.  download the reference genome from NCBI
+
+``` bash
+    datasets download genome
+    accession GCF_022682495.2 --include
+    gff3,rna,cds,protein,genome,seq-report
+```
+
+2.  filter using minimap and samtools <https://linsalrob.github.io/ComputationalGenomicsManual/Deconseq/>
+
+3.  
+
 ## Step 2: Taxonomic Classification (UTI Pathogen Focus)
 
 ### De-novo Assembly
 
-1.  Assemble contigs using metaFlye (WARNING: this step is very taxing on computer resources, it might take a while to run the command):
+1.  Assemble contigs using metaFlye (WARNING: this step is relatively taxing on computer resources, it might take a while to run the command):
 
 ``` python
 for i in $(seq -w 01 24)
