@@ -133,6 +133,12 @@ done
 
 `dna_r10.4.1_e8.2_400bps_sup@v5.0.0` is the version of the basecaller to use, pod5 can give dorado the kind of basecalling model to use, but it can be good to specify the model, specially if using fastq files (which don't contain this information).
 
+Each individual base-call is accompanied by another character which indicate the error probability for that base-call, called the Phred Quality score, which is calculated with the following formula:
+
+Q = −10 × log10 p
+
+Where p represents the estimated error probability. For example, a base-call with a Q score of 20 would have a probability of 1/100 of being incorrect. For a more in-depth explanation on this, read Ewing & Green (1998) (<http://genome.cshlp.org/cgi/pmidlookup?view=long&pmid=9521922>)
+
 2.  To check any of the generated BAM files, run:
 
 ``` bash
@@ -140,12 +146,6 @@ samtools head -n 100 barcodexx.bam
 ```
 
 Remember to replace the `barcodexx.bam` with your file-name.
-
-Each individual base-call is accompanied by another character which indicate the error probability for that base-call, called the Phred Quality score, which is calculated with the following formula:
-
-Q = −10 × log10 p
-
-Where p represents the estimated error probability. For example, a base-call with a Q score of 20 would have a probability of 1/100 of being incorrect. For a more in-depth explanation on this, read Ewing & Green (1998) (<http://genome.cshlp.org/cgi/pmidlookup?view=long&pmid=9521922>)
 
 ### Data Visualization
 
