@@ -1,14 +1,16 @@
-# Bioinformatics Pipeline for UTI Pathogen
+# Bioinformatics Pipeline for Bat Pathogens
 
 **DISCLAIMER: this code is nowhere near finished**
 
-*Identification from Host-Depleted Nanopore Sequencing Data (Optimized for bacterial detection in bat urinary samples/tissues relevant to UTI-causing pathogens)*
+*Identification from Host-Depleted Nanopore Sequencing Data (Optimized for bacterial detection of known human pathogens in bat tissues).*
 
-*Using an Apple Silicon Macbook (M2 chip), some of this code will still work in other operating systems, especially the Python code. Most, if not all, of the installation steps won't work on other OS*
+*Done using an Apple Silicon Macbook (M2 chip), some of this code will still work in other operating systems, especially the Python code. Most, if not all, of the installation steps won't work on other OS.*
 
 ## Step 0: Installations
 
 ### Dorado
+
+A basecalling algorithm developed by ONT for decoding the raw electrical signals produced from sequencing, and translating them into nucleotide sequences. It also outputs a quality score for each base, which will be used later.
 
 1.  To download the latest version of Dorado, go to <https://nanoporetech.com/software/other/dorado> and select your operating system. If you don't have an account with ONT, you'll be prompted to create one before installing.
 
@@ -30,7 +32,9 @@ source ~/.zshrc
 
 ### Homebrew
 
-1.  Homebrew is an open-source package manager for macOS and Linux, it will help with the installation of packages like Samtools. To install Homebrew, run:
+An open-source package manager for macOS and Linux, it will help with the installation of packages like Samtools.
+
+1.  To install Homebrew, run:
 
 ``` bash
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
@@ -39,6 +43,8 @@ source ~/.zshrc
 2.  to check that installation was sucesfull, run `brew config`.
 
 ### Samtools
+
+A program for interacting with high-throughput sequencing data, it is useful for reading, writing, editing, indexing and viewing data,
 
 1.  **After installing homebrew**, run:
 
@@ -50,7 +56,7 @@ brew install samtools
 
 ### Conda
 
-Anaconda is a reassembled program that aids in Python programming, it allows for easy download of packages, it includes Conda, which is an open-source manager.
+Anaconda is a program that aids in Python programming, allowing for easy download of packages, it also includes Conda, which is an open-source manager.
 
 1.  To install it, go to <https://www.anaconda.com/download/success>, and select your operating system.
 2.  Execute the downloaded file, and follow the instructions of the installer.
@@ -71,7 +77,7 @@ Anaconda is a reassembled program that aids in Python programming, it allows for
 
 Bioconda is a package manager (or channel) that lets you install software packages related to biomedical research.
 
-1.  In the base environment, download Bioconda, aswell as Conda Forge (needed for Bioconda to work)
+1.  In the base environment, download Bioconda, as well as Conda Forge (needed for Bioconda to work)
 
 ``` python
 conda config --add channels bioconda
@@ -95,7 +101,7 @@ conda install -c bioconda nanoplot
 
 ### Chopper
 
-Chopper is a tool to filter and trim fastq files from long read sequencing techniques like ONT. Go to your working environment and install it:
+Chopper is a tool to filter and trim fastq files from long read sequencing technologies like ONT. Go to your working environment and install it:
 
 ``` python
 conda activate example
@@ -104,7 +110,7 @@ conda install -c bioconda chopper
 
 ### Flye
 
-Flye is a contig assembler developed for long read sequencing. We will mainly be using the metaFlye algorithm withing the Flye library. To install Flye:
+Flye is a contig assembler developed for long read sequencing. We will mainly be using the metaFlye algorithm withing the Flye library, which is intended assembling metagenomic data with highly uneven coverage (Milkhail et al., 2020) (<https://doi.org/10.1038/s41592-020-00971-x>), and has been shown to work better that other assemblers (Latorre‑Pérez et al., 2020) (<https://doi.org/10.1038/s41598-020-70491-3>). To install Flye:
 
 ``` python
 conda activate example
@@ -196,6 +202,8 @@ done
 [**I should filter the dataset with minimap2 before assembling contigs, i think ?**]{.underline}
 
 ### Host Sequence Filtering
+
+Even though our data was generated using host-depleted sequencing, some of the host genome can still make it through. Because of this, it is necessary to remove these sequences before proceeding. For this we will be using the latest reference genome of *Desmodus rotundus*.
 
 1.  download the reference genome from NCBI
 
