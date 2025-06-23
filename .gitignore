@@ -8,3 +8,7 @@ chopper_out/
 samtools_fastq_out/
 flye_out/
 flye_assembly/
+datasets_out/
+minimap_out/
+ncbi_dataset.zip
+samtools_filter_out/

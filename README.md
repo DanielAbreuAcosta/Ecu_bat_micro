@@ -90,6 +90,15 @@ conda config --add channels conda-forge
 conda config --set channel_priority strict
 ```
 
+### Minimap
+
+``` python
+conda activate example
+conda install -c bioconda minimap2
+```
+
+### 
+
 ### NanoPlot
 
 Nanoplot is a plotting tool for long read sequencing data and alignments. Go to your working environment and install it:
@@ -147,6 +156,28 @@ samtools head -n 100 barcodexx.bam
 
 Remember to replace the `barcodexx.bam` with your file-name.
 
+add the bash script to run in the cluster. Add notes
+
+### Host Sequence Filtering
+
+Even though our data was generated using host-depleted sequencing, the host genome can still make it through. Because of this, it is necessary to remove these sequences before proceeding. For this we will be using the latest reference genome of *Desmodus rotundus*.
+
+leave this as an example for one and then add the real process for multiple host species
+
+1.  download the reference genome from NCBI
+
+``` bash
+datasets download genome
+accession GCF_022682495.2 --include
+gff3,rna,cds,protein,genome,seq-report
+```
+
+2.  filter using minimap and samtools <https://linsalrob.github.io/ComputationalGenomicsManual/Deconseq/>
+
+``` bash
+minimap2 --split-prefix=tmp$$ -a -xsr GCA_000001405.15_GRCh38_no_alt_plus_hs38d1_analysis_set.fna.gz R1.fastq.gz R2.fastq.gz | samtools view -bh | samtools sort -o output.bam
+```
+
 ### Data Visualization
 
 3.  In order to clean up the data, first look into the quality of the reads, as well as their length, this can be done with NanoPlot. This package prefers fastq files, so first transform them using samtools:
@@ -180,14 +211,14 @@ done
 
 `-o nanoplot_out/barcode${i}` puts all generated graphs in this directory.
 
-### Quality Filtering
+### Data Cleaning
 
 5.  Remove short and low-quality reads using chopper:
 
 ``` python
 for i in $(seq -w 01 24)
   do
-chopper --threads 8 -q 20 -l 20 -i samtools_fastq_out/barcode${i}.fastq > chopper_out/barcode${i}_filtered.fastq
+chopper --threads 8 -q 20 -l 20 -i samtools_filter_out/barcode${i}.fastq > chopper_out/barcode${i}_filtered.fastq
 done
 ```
 
@@ -198,24 +229,6 @@ done
 `-l 20` sets the minimum read length to 20bp.
 
 `-i samtools_fastq_out/barcode${i}.fastq` tells the package the name of the file to filter.
-
-[**I should filter the dataset with minimap2 before assembling contigs, i think ?**]{.underline}
-
-### Host Sequence Filtering
-
-Even though our data was generated using host-depleted sequencing, some of the host genome can still make it through. Because of this, it is necessary to remove these sequences before proceeding. For this we will be using the latest reference genome of *Desmodus rotundus*.
-
-1.  download the reference genome from NCBI
-
-``` bash
-    datasets download genome
-    accession GCF_022682495.2 --include
-    gff3,rna,cds,protein,genome,seq-report
-```
-
-2.  filter using minimap and samtools <https://linsalrob.github.io/ComputationalGenomicsManual/Deconseq/>
-
-3.  
 
 ## Step 2: Taxonomic Classification (UTI Pathogen Focus)
 
@@ -237,7 +250,7 @@ done
 
 `--nano-hq` specifies that the data was basecalled using Dorado's super accurate mode (in step 1.1.).
 
-`chopper_out/barcode${i}_filtered.fastq` tells the package the name of the rile to assemble.
+`chopper_out/barcode${i}_filtered.fastq` tells the package the name of the file to assemble.
 
 `--out-dirflye_out/barcode${i}` specifies the output directory
 
