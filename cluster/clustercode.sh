@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# before running make sure that the following files are present: mapping.tsv, all the barcodeXX.fastq files contained in samtools_fastq_out
+# before running make sure that the following files are present: mapping.tsv, all the barcodeXX.bam files contained in dorado_sup_out
 
 #create working directories
 mkdir -p datasets_out/
@@ -19,6 +19,13 @@ conda config --set channel_priority strict
 
 #install ncbi installer, minimap2 and samtools
 conda install -c conda-forge ncbi-datasets-cli -c bioconda minimap2 samtools
+
+# translate .bam files to .fastq files
+for i in $(seq -w 01 24)
+  do
+    barcode="barcode${i}"
+    samtools fastq dorado_sup_out/barcode${i}.bam > samtools_fastq_out/barcode${i}.fastq
+done
 
 #download reference genomes
 datasets download genome accession GCA_004027475.1 --include genome,seq-report --filename GCA_004027475.1.zip
