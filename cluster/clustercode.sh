@@ -27,7 +27,7 @@ for i in $(seq -w 01 24)
     samtools fastq dorado_sup_out/barcode${i}.bam > samtools_fastq_out/barcode${i}.fastq
 done
 
-#download reference genomes
+#download reference genomes (try making this a for loop)
 datasets download genome accession GCA_004027475.1 --include genome,seq-report --filename GCA_004027475.1.zip
 unzip GCA_004027475.1.zip -d datasets_out/GCA_004027475.1
 
@@ -85,5 +85,5 @@ done
 for i in $(seq -w 01 24)
   do
     barcode="barcode${i}"
-samtools fastq -f 4 minimap_out/barcode${i}.bam | samtools sort -o samtools_filter_out/barcode${i}.fastq
+samtools fastq -f 4 minimap_out/barcode${i}.bam | samtools sort -o samtools_filter_out/barcode${i}.fastq  # try running in paralell
 done
